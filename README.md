@@ -86,7 +86,7 @@ Performance should be measured against a defined workload and machine—not infe
 | `bench_latency` | Limit add, add/cancel, immediate cross/fill, and market-order paths; collects cycle-sample percentiles |
 | `bench_throughput` | Limit-order posting, aggressive crossing, add/cancel, market-order flood, and mixed workloads |
 | `bench_sequencer` | Asynchronous request/report round-trip and pipelined queue throughput |
-| `bench_scaling` | Thread-count and active-symbol-count benchmark scenarios |
+| `bench_scaling` | Parallel throughput across independent engine instances, plus active-symbol-count workload |
 | `bench_journal` | Memory-mapped journal append workload |
 | `bench_memory` | Order/price-level sizes, estimated pool footprint, and process memory where supported |
 | `bench_monte_carlo` | CPU pricing across path counts, plus CUDA cases when CUDA is enabled |
@@ -125,7 +125,7 @@ No headline throughput or latency number is claimed in this README. The source c
 - Throughput in operations/second and latency percentiles (at minimum p50, p99, and p99.9)
 - Whether reported latency is wall-clock time, nanoseconds, or raw timestamp-counter cycles
 
-The latency harness collects timestamp-counter cycle samples on x86 and reports cycle counters; do not label those counters as nanoseconds without a documented, appropriate conversion. Results will vary with hardware, compiler, operating system, workload, and configuration.
+The latency harness collects timestamp-counter cycle samples on x86 and reports cycle counters; do not label those counters as nanoseconds without a documented, appropriate conversion. Results will vary with hardware, compiler, operating system, workload, and configuration. The thread-count scaling case creates a separate engine instance per benchmark worker; it is not a shared-engine contention benchmark.
 
 > **Performance note:** the presence of AVX2/FMA compiler flags and benchmark targets describes the build and test configuration; it does not establish a particular latency, throughput, or production-performance guarantee.
 
@@ -145,7 +145,7 @@ The build fetches these external dependencies during configuration:
 - Google Benchmark 1.9.1
 - Standalone Asio 1.30.2
 
-### Linux / macOS / GCC / Clang
+### Linux / Intel macOS / GCC / Clang
 
 ```bash
 git clone https://github.com/ram-mittal/ULTRALOB-engine-.git
